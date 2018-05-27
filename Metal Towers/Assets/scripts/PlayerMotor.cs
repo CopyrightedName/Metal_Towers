@@ -7,6 +7,8 @@ public class PlayerMotor : MonoBehaviour {
     public GameObject model;
 
     public Rigidbody rg;
+    public Animator animModel;
+    public Animator animPlayer;
 
     Quaternion desRotation;
     Vector3 wallSidePos;
@@ -44,13 +46,35 @@ public class PlayerMotor : MonoBehaviour {
             desRotation = Quaternion.Euler(0, 0, 0);
         }
 
+        if(moveX != 0)
+        {
+            animModel.SetBool("walking", true);
+        }
+        else
+        {
+            animModel.SetBool("walking", false);
+        }
 
-        model.transform.rotation = Quaternion.Lerp(model.transform.rotation, desRotation, rotSpeed);
+
+        model.transform.rotation = desRotation;
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
+            animModel.SetBool("jumping", true);
             rg.AddForce(Vector3.up * jumpForce);
             isGrounded = false;
+        }
+
+        if(isGrounded && Input.GetKey(KeyCode.LeftControl))
+        {
+            animPlayer.SetBool("crouching", true);
+            animModel.SetBool("crouching", true);
+        }
+
+        if (isGrounded && Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            animPlayer.SetBool("crouching", false);
+            animModel.SetBool("crouching", false);
         }
     }
 
@@ -59,6 +83,7 @@ public class PlayerMotor : MonoBehaviour {
         if (other.gameObject.CompareTag("ground"))
         {
             isGrounded = true;
+            animModel.SetBool("jumping", false);
         }
     }
 }
