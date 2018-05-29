@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour {
 
+    public GameObject crosshair;
     public GameObject model;
+    public GameObject bullet;
+    GameObject bulletInstance;
+
+
+    public Transform bulletPos;
 
     public Rigidbody rg;
     public Animator animModel;
@@ -12,14 +18,19 @@ public class PlayerMotor : MonoBehaviour {
 
     Quaternion desRotation;
     Vector3 wallSidePos;
+    Vector3 crosshairPos;
 
     public float moveSpeed;
     public float jumpForce;
     public float rotSpeed;
     public float climbSpeed;
     float moveX;
+    public float bulletSpeed;
+    public float minY;
+    public float maxY;
 
     bool isGrounded = true;
+    bool isMoving;
 
 
     void Start () {
@@ -28,6 +39,40 @@ public class PlayerMotor : MonoBehaviour {
 	
 	void Update () {
         Movement();
+
+        if(Input.GetMouseButton(1) && !isMoving)
+        {
+            if (isMoving)
+            {
+                crosshair.SetActive(false);
+                return;
+            }
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.CompareTag("cursorPos"))
+                {
+                    crosshair.transform.position = hit.point;
+                }
+            }
+
+            crosshair.SetActive(true);
+            if (Input.GetMouseButtonDown(0))
+            {
+                bulletInstance = Instantiate(bullet, bulletPos.position, Quaternion.identity);
+                bulletInstance.transform.position = Vector3.Lerp(bulletPos.position, hit.point, bulletSpeed * Time.deltaTime);
+                crosshairPos = crosshair.transform.position;
+            }
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            crosshair.SetActive(false);
+        }
+
+        Cursor.visible = false;
+
 	}
 
     void Movement()
@@ -48,10 +93,12 @@ public class PlayerMotor : MonoBehaviour {
 
         if(moveX != 0)
         {
+            isMoving = true;
             animModel.SetBool("walking", true);
         }
         else
         {
+            isMoving = false;
             animModel.SetBool("walking", false);
         }
 
@@ -85,5 +132,13 @@ public class PlayerMotor : MonoBehaviour {
             isGrounded = true;
             animModel.SetBool("jumping", false);
         }
+    }
+
+    void Attack()
+    {
+
+
+
+       
     }
 }
