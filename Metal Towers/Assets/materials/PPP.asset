@@ -302,13 +302,13 @@ MonoBehaviour:
   userLut:
     m_Enabled: 0
     m_Settings:
-      lut: {fileID: 0}
-      contribution: 1
+      lut: {fileID: 2800000, guid: 78b06834af8bc544da3da025038d9d1c, type: 3}
+      contribution: 0.046
   chromaticAberration:
     m_Enabled: 1
     m_Settings:
       spectralTexture: {fileID: 0}
-      intensity: 0.302
+      intensity: 0.308
   grain:
     m_Enabled: 0
     m_Settings:
