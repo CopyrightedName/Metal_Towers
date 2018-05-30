@@ -18,16 +18,24 @@ public class PlayerMotor : MonoBehaviour {
     public float rotSpeed;
     public float climbSpeed;
     float moveX;
+    public float maxHP;
+    float HP;
 
     bool isGrounded = true;
+    bool canBeSeen;
 
 
     void Start () {
-		
+        HP = maxHP;
 	}
 	
 	void Update () {
         Movement();
+
+        if(HP <= 0)
+        {
+            Die();
+        }
 	}
 
     void Movement()
@@ -85,5 +93,10 @@ public class PlayerMotor : MonoBehaviour {
             isGrounded = true;
             animModel.SetBool("jumping", false);
         }
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
     }
 }
